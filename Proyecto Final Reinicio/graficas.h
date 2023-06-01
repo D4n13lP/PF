@@ -107,7 +107,7 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
         YBarra = Yi + (EspacioY - AlturaBarra);
         setfillstyle(SOLID_FILL, i + 1); // Establecer el color de relleno
         bar(XBarra, YBarra, XBarra + AnchoBarra, Yf); // Utilizar la función bar() en lugar de rectangle()
-        sprintf(ganancia2string, "%.2f", datos[i].ganancia);
+        sprintf(ganancia2string, "$ %.2f", datos[i].ganancia);
         outtextxy(XBarra, YBarra-20, ganancia2string);
         sprintf(fullname, "Dr. %s %s", datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
         outtextxy(XBarra, Yf+5, fullname);
