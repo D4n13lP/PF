@@ -189,7 +189,7 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
         char nombreYporcentaje[50];
 
         // Tamaño de fuente original
-        originalFontSize = 2;
+        originalFontSize = 1;
 
         // Ajustar el tamaño de fuente
         adjustedFontSize = (int)(originalFontSize * scale);
@@ -210,7 +210,8 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
             bar(left, top, right, bottom);
             sprintf(nombreYporcentaje, "(%.2f%%) %s %s", porcentajes[i], datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
             setcolor(BLACK);
-            settextstyle(GOTHIC_FONT, HORIZ_DIR, adjustedFontSize);
+            //settextstyle(GOTHIC_FONT, HORIZ_DIR, adjustedFontSize);
+            settextstyle(DEFAULT_FONT, HORIZ_DIR, adjustedFontSize);
             outtextxy(left, top+squareSize, nombreYporcentaje);
             anterior=end;
         }
