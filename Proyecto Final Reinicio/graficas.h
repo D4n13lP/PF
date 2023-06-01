@@ -155,10 +155,25 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
         Xf=ancho-Xi;
         Yi=alto*PORC/100;
         Yf=alto-Yi;
+
+        // Resolución de referencia
+        int referenceWidth = 1920;  // Resolución de referencia
+        int referenceHeight = 1080;
+        // Calcular relación de escala
+        float scaleX = (float)ancho / referenceWidth;
+        float scaleY = (float)alto / referenceHeight;
+        float scale = (scaleX < scaleY) ? scaleX : scaleY;  // Usar la escala más pequeña para mantener la proporción
+
+        // Tamaño de fuente original
+        int originalFontSize = 5;
+
+        // Ajustar el tamaño de fuente
+        int adjustedFontSize = (int)(originalFontSize * scale);
+
         initwindow(ancho,alto);
         setbkcolor(COLOR(255,255,255));
 	    cleardevice();
-        settextstyle(GOTHIC_FONT, HORIZ_DIR, 5);
+        settextstyle(GOTHIC_FONT, HORIZ_DIR, adjustedFontSize);
         setcolor(BLACK);
         outtextxy(Xi, Yi, "Porcentaje de las ganancias totales");
         // Inicializar la semilla del generador de números aleatorios con la hora actual
@@ -172,6 +187,12 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
         int squareSize = alto*.05;
         int gap = squareSize;
         char nombreYporcentaje[50];
+
+        // Tamaño de fuente original
+        originalFontSize = 2;
+
+        // Ajustar el tamaño de fuente
+        adjustedFontSize = (int)(originalFontSize * scale);
 
         for(int i=0; i<nbarras; i++){
             r = generarAleatorio();
@@ -189,7 +210,7 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
             bar(left, top, right, bottom);
             sprintf(nombreYporcentaje, "(%.2f%%) %s %s", porcentajes[i], datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
             setcolor(BLACK);
-            settextstyle(GOTHIC_FONT, HORIZ_DIR, 2);
+            settextstyle(GOTHIC_FONT, HORIZ_DIR, adjustedFontSize);
             outtextxy(left, top+squareSize, nombreYporcentaje);
             anterior=end;
         }
