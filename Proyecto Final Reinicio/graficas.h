@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <winbgim.h>
+#include <time.h>
 
 //Porcentaje de espacio para que quede un "margen" en la pantalla
 #define PORC 5
@@ -44,6 +45,11 @@ typedef struct{
 }Gananciadoc;
 
 
+int generarAleatorio() {
+    return rand() % 256;
+}
+
+
 void graficaBarras(Gananciadoc *datos, int nbarras){
 
     int Xf, Xi, Yf, Yi, EspacioX, EspacioY, AnchoBarra, CantidadBarras,X,Y;
@@ -71,7 +77,7 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
     X=getmaxwidth();
     Y=getmaxheight();
 
-    initwindow(X,Y,"Ventas");
+    initwindow(X,Y,"Ganancias por doctor");
     setbkcolor(COLOR(255,255,255));
 	cleardevice();
 
@@ -120,3 +126,50 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
     closegraph();
 
 }
+
+
+
+void graficaPastel(Gananciadoc *datos, int nbarras) {
+
+        //Primero calculamos el total de ingresos que genera el hospital con los costos de las consultas
+        float ingresosTotal=0.0;
+        for(int i=0; i<nbarras; ++i){
+            ingresosTotal+=datos[i].ganancia;
+        }
+        printf("\nIngresos totales del Hospital %f\n", ingresosTotal);
+
+        //Ahora calculamos el porcentaje que representan las ganancias de cada doctor
+        float porcentajes[nbarras];
+        for(int i=0; i<nbarras; ++i){
+            porcentajes[i]=(datos[i].ganancia*100)/ingresosTotal;
+            printf("\n%f\n", porcentajes[i]);
+        }
+        
+        int ancho=getmaxwidth(), alto=getmaxheight();
+        initwindow(ancho,alto);
+        setbkcolor(COLOR(255,255,255));
+	    cleardevice();
+
+        // Inicializar la semilla del generador de números aleatorios con la hora actual
+        srand(time(NULL));
+
+        int r, g, b, radio=alto/3; 
+        float start, end, anterior=0;
+       
+        for(int i=0; i<nbarras; i++){
+            r = generarAleatorio();
+            g = generarAleatorio();
+            b = generarAleatorio();
+            setfillstyle(SOLID_FILL, COLOR(r,g,b));
+            start=anterior;
+            end=start+(360*(porcentajes[i]/100));
+            pieslice(ancho/2, alto/2, start, end, radio);
+            anterior=end;
+        }
+
+
+        while(!kbhit());
+
+        closegraph();
+
+    }

@@ -1120,7 +1120,7 @@ void getgraphicsData(int opcion){
 	if(opcion==1){
 		graficaBarras(datos, gsize);
 	}else if(opcion==2){
-
+		graficaPastel(datos, gsize);
 	}
 
 	system("pause");
