@@ -93,6 +93,9 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
 
     XBarra=Xi;
 
+    setcolor(COLOR(0,0,0));
+    outtextxy(Xi, 0, "Dinero por doctor");
+
     setlinestyle(SOLID_LINE,0,3);
     //setcolor(YELLOW);
     setcolor(BLACK);
@@ -131,6 +134,8 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
 
 void graficaPastel(Gananciadoc *datos, int nbarras) {
 
+        int Xf, Xi, Yf, Yi;
+
         //Primero calculamos el total de ingresos que genera el hospital con los costos de las consultas
         float ingresosTotal=0.0;
         for(int i=0; i<nbarras; ++i){
@@ -146,24 +151,46 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
         }
         
         int ancho=getmaxwidth(), alto=getmaxheight();
+        Xi=ancho*PORC/100;
+        Xf=ancho-Xi;
+        Yi=alto*PORC/100;
+        Yf=alto-Yi;
         initwindow(ancho,alto);
         setbkcolor(COLOR(255,255,255));
 	    cleardevice();
-
+        settextstyle(GOTHIC_FONT, HORIZ_DIR, 5);
+        setcolor(BLACK);
+        outtextxy(Xi, Yi, "Porcentaje de las ganancias totales");
         // Inicializar la semilla del generador de números aleatorios con la hora actual
         srand(time(NULL));
 
         int r, g, b, radio=alto/3; 
         float start, end, anterior=0;
        
+        setcolor(COLOR(255,255,255));
+
+        int squareSize = alto*.05;
+        int gap = squareSize;
+        char nombreYporcentaje[50];
+
         for(int i=0; i<nbarras; i++){
             r = generarAleatorio();
             g = generarAleatorio();
             b = generarAleatorio();
+            setcolor(COLOR(255,255,255));
+            int left = ancho*.75;
+            int top = squareSize + i * (squareSize + gap);
+            int right = left + squareSize;
+            int bottom = top + squareSize;
             setfillstyle(SOLID_FILL, COLOR(r,g,b));
             start=anterior;
             end=start+(360*(porcentajes[i]/100));
             pieslice(ancho/2, alto/2, start, end, radio);
+            bar(left, top, right, bottom);
+            sprintf(nombreYporcentaje, "(%.2f%%) %s %s", porcentajes[i], datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
+            setcolor(BLACK);
+            settextstyle(GOTHIC_FONT, HORIZ_DIR, 2);
+            outtextxy(left, top+squareSize, nombreYporcentaje);
             anterior=end;
         }
 

@@ -1126,6 +1126,7 @@ void getgraphicsData(int opcion){
 	system("pause");
     fclose(archivocons);
 	fclose(archivodr);
+	//free(datos);
     return;
 
 }
