@@ -4,40 +4,7 @@
 #include <winbgim.h>
 #include "graficas.h"
 
-/* typedef struct {
-	char Nombre[50];
-	char Apellidos[100];
-	int Edad;
-	char Direccion[100];
-}Persona;
 
-typedef struct{
-	int clave;
-	Persona DatosPersonales;
-	char borrado;	
-}Paciente;
-
-typedef struct{
-	int NumeroTrabajador;
-	Persona DatosPersonales;
-	char Especialidad[50];
-	int Experiencia;
-	char borrado;
-}Doctor;
-
-typedef struct{
-	int NoConsulta;
-	float costo;
-	int clave;
-	int NumeroTrabajador;
-	char borrado;
-}Consulta;
-
-typedef struct{
-	int NumeroTrabajador;
-	Persona DatosPersonales;
-	float ganancia;
-}Gananciadoc; */
 
 int menu(){
 	
