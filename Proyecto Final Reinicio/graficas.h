@@ -4,11 +4,47 @@
 
 //Porcentaje de espacio para que quede un "margen" en la pantalla
 #define PORC 5
-
 //Cantidad de datos
 #define CANTIDAD 8
 
-void graficasHospital(){
+
+typedef struct {
+	char Nombre[50];
+	char Apellidos[100];
+	int Edad;
+	char Direccion[100];
+}Persona;
+
+typedef struct{
+	int clave;
+	Persona DatosPersonales;
+	char borrado;	
+}Paciente;
+
+typedef struct{
+	int NumeroTrabajador;
+	Persona DatosPersonales;
+	char Especialidad[50];
+	int Experiencia;
+	char borrado;
+}Doctor;
+
+typedef struct{
+	int NoConsulta;
+	float costo;
+	int clave;
+	int NumeroTrabajador;
+	char borrado;
+}Consulta;
+
+typedef struct{
+	int NumeroTrabajador;
+	Persona DatosPersonales;
+	float ganancia;
+}Gananciadoc;
+
+
+void graficaBarras(Gananciadoc *datos, int nbarras){
 
     int Xf, Xi, Yf, Yi, EspacioX, EspacioY, AnchoBarra, CantidadBarras,X,Y;
     int AlturaBarra, YBarra, XBarra, i;
@@ -18,7 +54,7 @@ void graficasHospital(){
     float Datos[CANTIDAD]={150.2, 180.3, 230, 125, 58.97, 450.67, 7.5, 75.6};
 
     //La cantidad depende de los datos guardados en el archivo
-    CantidadBarras=CANTIDAD;
+    CantidadBarras=nbarras;
 
     //Se debe encontrar el dato m�s grande
     ValorBarraMax=450.67;
@@ -46,7 +82,7 @@ void graficasHospital(){
     setcolor(YELLOW);
     line(Xi,Yf+2,Xf,Yf+2);
 
-    for(i=0; i<CANTIDAD; i++){
+    for(i=0; i<nbarras; i++){
         setcolor(i+1);
         AlturaBarra=(Datos[i]/ValorBarraMax)*EspacioY;
         YBarra=Yi+(EspacioY-AlturaBarra);

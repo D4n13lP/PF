@@ -4,7 +4,7 @@
 #include <winbgim.h>
 #include "graficas.h"
 
-typedef struct {
+/* typedef struct {
 	char Nombre[50];
 	char Apellidos[100];
 	int Edad;
@@ -37,7 +37,7 @@ typedef struct{
 	int NumeroTrabajador;
 	Persona DatosPersonales;
 	float ganancia;
-}Gananciadoc;
+}Gananciadoc; */
 
 int menu(){
 	
@@ -53,7 +53,7 @@ int menu(){
 	printf("4. Graficas\n");
 	printf("5. Salir\n");
 	
-	printf("\nOpci�n: ");
+	printf("\nOpcion: ");
 	scanf("%d", &opcion);
 	
 	return opcion;
@@ -1047,11 +1047,12 @@ void menuConsultas(){
 
 }
 
-void getgraphicsData(Gananciadoc **datos, int *gsize){
+void getgraphicsData(int opcion){
     FILE *archivocons, *archivodr;
 	Consulta c;
 	Doctor d;
-	Gananciadoc *gtemp;
+	Gananciadoc *datos, *gtemp;
+	int gsize=1;
 
     archivocons = fopen("Consultas.bin", "rb");
 	archivodr = fopen("Doctores.bin", "rb");
@@ -1066,17 +1067,17 @@ void getgraphicsData(Gananciadoc **datos, int *gsize){
 		system("pause");
 		return;
 	}
-    (*datos)=(Gananciadoc *)calloc(*gsize, sizeof(Gananciadoc));
+    datos=(Gananciadoc *)calloc(gsize, sizeof(Gananciadoc));
 
     int isRepeated=0;
 	fread(&c, sizeof(Consulta), 1, archivocons);
     
-	for(int i=0; i<=*gsize; i++){
+	for(int i=0; i<=gsize; i++){
 	    //GUARDAR EL PRIMER NUEMERO DE TRABAJADOR DEL ARCHIVO
 	    //Guardar el primer Numero de trabajador del archivo de consultas en el arreglo datos de tipo Gananciadoc
 	    //comenzando en la posicion 0 
 		if(i==0)
-			(*datos)[i].NumeroTrabajador=c.NumeroTrabajador;
+			datos[i].NumeroTrabajador=c.NumeroTrabajador;
 
 		if(i>=1){
 			while(!feof(archivocons)){
@@ -1085,21 +1086,21 @@ void getgraphicsData(Gananciadoc **datos, int *gsize){
 	    //Con fread avanza una posicion el cursor del archivo y lee el siguiente numero de Trabajador del archivo 
 	    //por lo que a continuacion debemos verificar los numeros de trabajador guardados en g hasta ahora, uno por uno 
 	    //y utilizar una variable que indique si el siguiente numero de trabajador leido del archivo esta repetido 
-				for(int j=0; j<=(int)*gsize; j++){
-					if((*datos)[j].NumeroTrabajador==c.NumeroTrabajador) 
+				for(int j=0; j<=(int)gsize; j++){
+					if(datos[j].NumeroTrabajador==c.NumeroTrabajador) 
 						isRepeated=1;
 				}
 		//INCREMENTAR EL TAMAÑO DEL ARREGLO datos PARA GUARDAR EL SIGUINTE NUEMERO DE TRABAJADOR 
 				if(isRepeated==0 && c.borrado==0){
 				
-					*gsize++;
-					gtemp=(Gananciadoc *)realloc((*datos), (*gsize)*sizeof(Gananciadoc));
+					gsize++;
+					gtemp=(Gananciadoc *)realloc(datos, gsize*sizeof(Gananciadoc));
 					//     //dos formas de copiar arreglos de tipo derivado la de abajo rompio el programa
 					//free(g);
 					//g=(Gananciadoc *)calloc(gsize, sizeof(Gananciadoc));
 					//memcpy(g, gtemp, gsize*sizeof(Gananciadoc));
-					*datos=gtemp;
-					(*datos)[i].NumeroTrabajador=c.NumeroTrabajador;
+					datos=gtemp;
+					datos[i].NumeroTrabajador=c.NumeroTrabajador;
 					break;
 				}
 				isRepeated=0;
@@ -1112,13 +1113,13 @@ void getgraphicsData(Gananciadoc **datos, int *gsize){
     //EXTRAER LOS COSTOS DE LAS CONSULTAS Y ACUMULARLOS EN EL ARREGLO G EN EL NUMERO DE TRABAJADOR QUE LE CORRESPONDA
 	rewind(archivocons);
 	fread(&c, sizeof(Consulta), 1, archivocons);
-	for(int i=0; i<*gsize; ++i){
+	for(int i=0; i<gsize; ++i){
 		
 		while(!feof(archivocons)){
-			if((*datos)[i].NumeroTrabajador==c.NumeroTrabajador && c.borrado==0){
-				(*datos)[i].ganancia+=c.costo;
+			if(datos[i].NumeroTrabajador==c.NumeroTrabajador && c.borrado==0){
+				datos[i].ganancia+=c.costo;
 			}
-			if((*datos)[i].NumeroTrabajador!=c.NumeroTrabajador){     //Cuando encuentre un numero de Trabajador que no sea igual 
+			if(datos[i].NumeroTrabajador!=c.NumeroTrabajador){     //Cuando encuentre un numero de Trabajador que no sea igual 
 				break;                                         //al que esta en la actual posicion del arreglo daots[] se rompe el 
 			}                                                  //bucle para cambiar a la siguinte posicion del arreglo g[]  
 			fread(&c, sizeof(Consulta), 1, archivocons);
@@ -1129,13 +1130,13 @@ void getgraphicsData(Gananciadoc **datos, int *gsize){
     //EXTRAER EL NOMBRE DEL DOCTOR QUE COINCIDE CON EL NUMERO DE TRABAJADOR DEL ARCHIVO D
 	fread(&d, sizeof(Doctor), 1, archivodr);
 
-	for(int i=0; i<*gsize; ++i){
+	for(int i=0; i<gsize; ++i){
 		while (!feof(archivodr))
 		{
-			if((*datos)[i].NumeroTrabajador==d.NumeroTrabajador)
+			if(datos[i].NumeroTrabajador==d.NumeroTrabajador)
 			{
-				strcpy((*datos)[i].DatosPersonales.Nombre, d.DatosPersonales.Nombre);
-				strcpy((*datos)[i].DatosPersonales.Apellidos, d.DatosPersonales.Apellidos);
+				strcpy(datos[i].DatosPersonales.Nombre, d.DatosPersonales.Nombre);
+				strcpy(datos[i].DatosPersonales.Apellidos, d.DatosPersonales.Apellidos);
 				break;
 			}
 			fread(&d, sizeof(Doctor), 1, archivodr);
@@ -1143,6 +1144,19 @@ void getgraphicsData(Gananciadoc **datos, int *gsize){
 
 	}
 
+	for(int i=0; i<gsize; i++){
+		printf("\nNumero de trabajador(Doctor): %d", datos[i].NumeroTrabajador);
+		printf("\nNombre del doctor: %s %s", datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
+		printf("\nGanancias del doctor: %f\n", datos[i].ganancia);
+	}
+
+	if(opcion==1){
+		graficaBarras(datos, gsize);
+	}else if(opcion==2){
+
+	}
+
+	system("pause");
     fclose(archivocons);
 	fclose(archivodr);
     return;
@@ -1150,36 +1164,8 @@ void getgraphicsData(Gananciadoc **datos, int *gsize){
 }
 
 
-void graficaBarras(Gananciadoc **datos, int *gsize){
-   	
-	getgraphicsData(datos, gsize);
-	printf("\nNumero de doctores: %d\n", *gsize);
-	for(int i=0; i<*gsize; i++){
-		printf("\nNumero de trabajador(Doctor): %d", (*datos)[i].NumeroTrabajador);
-		printf("\nNombre del doctor: %s %s", (*datos)[i].DatosPersonales.Nombre, (*datos)[i].DatosPersonales.Apellidos);
-		printf("\nGanancias del doctor: %f\n",(*datos)[i].ganancia);
-	}
-	graficasHospital();
-	
-	
-
-	//free(g);
-	//free(gtemp);
-	//g=NULL;
-	//gtemp=NULL;
-	system("pause");
-	
-
-}
-
-void graficaPastel(Gananciadoc **datos, int *gsize){
-
-}
-
 void menuGraficas(){
-	int opcion, gsize=1;
-    Gananciadoc *datos;
-	
+	int opcion;
 	do {
 		system("cls");
 		printf("\nGraficas\n\nSelecciona el tipo de grafica\n");
@@ -1187,9 +1173,9 @@ void menuGraficas(){
 		scanf("%d", &opcion);
 
 		switch(opcion){
-			case 1:	graficaBarras(&datos, &gsize);
+			case 1:	getgraphicsData(opcion);
 				break;
-			case 2:	graficaPastel(&datos, &gsize);
+			case 2:	getgraphicsData(opcion);
 				break;
 		}
 
