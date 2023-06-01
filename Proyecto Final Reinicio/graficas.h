@@ -51,13 +51,22 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
     float ValorBarra, ValorBarraMax;
 
     //Aqu� son datos fijos, pero se deben tomar de un archivo
-    float Datos[CANTIDAD]={150.2, 180.3, 230, 125, 58.97, 450.67, 7.5, 75.6};
+    //float Datos[CANTIDAD]={150.2, 180.3, 230, 125, 58.97, 450.67, 7.5, 75.6};
+    float Datos[nbarras];
+    for(int i=0; i<nbarras; ++i){
+        Datos[i]=datos[i].ganancia;
+    }
 
     //La cantidad depende de los datos guardados en el archivo
     CantidadBarras=nbarras;
 
     //Se debe encontrar el dato m�s grande
-    ValorBarraMax=450.67;
+    //ValorBarraMax=450.67;
+    ValorBarraMax=datos[0].ganancia;
+    for(int i=1; i<nbarras; ++i){
+        if(datos[i].ganancia>ValorBarraMax)
+            ValorBarraMax=datos[i].ganancia;
+    }
 
     X=getmaxwidth();
     Y=getmaxheight();
@@ -79,15 +88,30 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
     XBarra=Xi;
 
     setlinestyle(SOLID_LINE,0,3);
-    setcolor(YELLOW);
+    //setcolor(YELLOW);
+    setcolor(BLACK);
     line(Xi,Yf+2,Xf,Yf+2);
 
-    for(i=0; i<nbarras; i++){
+    /* for(i=0; i<nbarras; i++){
         setcolor(i+1);
         AlturaBarra=(Datos[i]/ValorBarraMax)*EspacioY;
         YBarra=Yi+(EspacioY-AlturaBarra);
         rectangle(XBarra,YBarra,XBarra+AnchoBarra,Yf);
         XBarra+=AnchoBarra*2;
+    } */
+    char ganancia2string[20];
+    char fullname[50];
+    for (i = 0; i < nbarras; i++) {
+        setcolor(i + 1);
+        AlturaBarra = (Datos[i] / ValorBarraMax) * EspacioY;
+        YBarra = Yi + (EspacioY - AlturaBarra);
+        setfillstyle(SOLID_FILL, i + 1); // Establecer el color de relleno
+        bar(XBarra, YBarra, XBarra + AnchoBarra, Yf); // Utilizar la función bar() en lugar de rectangle()
+        sprintf(ganancia2string, "%.2f", datos[i].ganancia);
+        outtextxy(XBarra, YBarra-20, ganancia2string);
+        sprintf(fullname, "Dr. %s %s", datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
+        outtextxy(XBarra, Yf+5, fullname);
+        XBarra += AnchoBarra * 2;
     }
 
     //Ciclo para que se vea la gr�fica antes de que  se cierre la ventana
