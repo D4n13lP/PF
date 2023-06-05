@@ -1081,6 +1081,8 @@ void getgraphicsData(int opcion){
 	rewind(archivocons);
 	fread(&c, sizeof(Consulta), 1, archivocons);
 	for(int i=0; i<gsize; ++i){
+
+		datos[i].ganancia=0;
 		
 		while(!feof(archivocons)){
 			if(datos[i].NumeroTrabajador==c.NumeroTrabajador && c.borrado==0){
