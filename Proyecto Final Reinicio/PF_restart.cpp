@@ -1307,14 +1307,10 @@ void menuGraficas(){
 		system("cls");
 		printf("\nGraficas\n\nSelecciona el tipo de grafica\n");
 		printf("\n1. Grafica de Barras\n2. Grafica de Pastel\n3. Salir\n");
+		printf("\nopcion: ");
 		scanf("%d", &opcion);
 
-		switch(opcion){
-			case 1:	getgraphicsData(opcion);
-				break;
-			case 2:	getgraphicsData(opcion);
-				break;
-		}
+		getgraphicsData(opcion);
 
 	}while(opcion!=3);
 }
