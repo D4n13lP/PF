@@ -449,7 +449,7 @@ void RegistroDoctores(){
 			scanf("%d", &d.NumeroTrabajador);
 			repetido=0;
 			for(int i=0; i<dsize; i++){
-				if(d.NumeroTrabajadore==d1[i].NumeroTrabajador && d1[i].borrado==0){
+				if(d.NumeroTrabajador==d1[i].NumeroTrabajador && d1[i].borrado==0){
 					repetido=1;
 					printf("\nEl numero de trabajador ingresado ya se encuentra registrado, ingresa otro por favor\n");
 					system("pause");
@@ -654,17 +654,26 @@ void ActualizacionDoctores(){
 }
 
 void BorradoDoctores(){
-	int wantedKey, posicion, encontrado;
-	char ans;
+	
 	FILE *archivo;
 	Doctor d;
-	printf("\nIngresa el numero de trabajador del doctor a borrar: ");
-	scanf("%d", &wantedKey);
+	int wantedKey, posicion, encontrado=0;
+	char ans;
+
+	system("cls");
+	
+	printf("\n\t\tBorrado de Doctores\n\n");
+
 	archivo=fopen("Doctores.bin", "r+b");
+
 	if(archivo==NULL){
 		printf("\nNo se pudo encontrar el archivo\n");
 		system("pause");
+		return;
 	}
+
+	printf("\nIngresa el numero de trabajador del doctor a borrar: ");
+	scanf("%d", &wantedKey);
 	
 	//Se comineza en la posicion 0 (byte 0 en el archivo)
 	posicion=0;
@@ -700,6 +709,12 @@ void BorradoDoctores(){
 			fread(&d, sizeof(Doctor), 1, archivo);
 		}	
 	}
+
+	if(encontrado==0)
+		printf("\n\nNo se encontr� al doctor con Numero de trabajador %d\n\n", wantedKey);
+	
+	fclose(archivo);
+	system("pause");
 }
 
 void ListadoDoctores(){
@@ -1139,8 +1154,14 @@ void getgraphicsData(int opcion){
 	    //GUARDAR EL PRIMER NUEMERO DE TRABAJADOR DEL ARCHIVO
 	    //Guardar el primer Numero de trabajador del archivo de consultas en el arreglo datos de tipo Gananciadoc
 	    //comenzando en la posicion 0 
-		if(i==0)
+		while(!feof(archivocons)&&c.borrado==1){
+				fread(&c, sizeof(Consulta), 1, archivocons);
+				//fseek(archivocons, sizeof(Consulta), SEEK_CUR);
+			}
+		if(i==0){
 			datos[i].NumeroTrabajador=c.NumeroTrabajador;
+		}
+		
 
 		if(i>=1){
 			while(!feof(archivocons)){
@@ -1173,9 +1194,14 @@ void getgraphicsData(int opcion){
 		}		
 	}
 
-    //EXTRAER LOS COSTOS DE LAS CONSULTAS Y ACUMULARLOS EN EL ARREGLO G EN EL NUMERO DE TRABAJADOR QUE LE CORRESPONDA
+    //EXTRAER LOS COSTOS DE LAS CONSULTAS Y ACUMULARLOS EN EL ARREGLO datos EN EL NUMERO DE TRABAJADOR QUE LE CORRESPONDA
 	rewind(archivocons);
 	fread(&c, sizeof(Consulta), 1, archivocons);
+	
+	while(c.borrado==1){
+		fread(&c, sizeof(Consulta), 1, archivocons);
+	}
+
 	for(int i=0; i<gsize; ++i){
 
 		datos[i].ganancia=0;
@@ -1185,8 +1211,8 @@ void getgraphicsData(int opcion){
 				datos[i].ganancia+=c.costo;
 			}
 			if(datos[i].NumeroTrabajador!=c.NumeroTrabajador){     //Cuando encuentre un numero de Trabajador que no sea igual 
-				break;                                         //al que esta en la actual posicion del arreglo daots[] se rompe el 
-			}                                                  //bucle para cambiar a la siguinte posicion del arreglo g[]  
+				break;                                         //al que esta en la actual posicion del arreglo datos[] se rompe el 
+			}                                                  //bucle para cambiar a la siguinte posicion del arreglo datos[]  
 			fread(&c, sizeof(Consulta), 1, archivocons);
 		}
 
