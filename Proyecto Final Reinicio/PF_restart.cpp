@@ -416,23 +416,61 @@ void ImprimeDoctor(Doctor d){
 }
 
 void RegistroDoctores(){
-	FILE *archivo;
-	Doctor d;
+	FILE *archivo, *verificaArchivo;
+	Doctor d, *d1, d1temp;
+	int dsize=0, repetido=0, contador=0;  //Repetido=1 -> SI, 0 -> NO
+	char ans[4];
 	
 	system("cls");
 	
 	printf("\n\t\tAlta de doctores\n\n");
 
+	verificaArchivo = fopen("Doctores.bin", "rb");
 	archivo = fopen("Doctores.bin", "ab");
 	
 	if (archivo==NULL){
 		printf("\nNo se pudo abrir el archivo\n\n");
-	}else{	
+	}else if(verificaArchivo==NULL){
+		printf("\nNo se pudo abrir el archivo\n\n");
+	}else{
+		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaño del arreglo
+		while(!feof(verificaArchivo)){
+			fread(&d1temp, sizeof(Doctor), 1, verificaArchivo);
+			dsize++;
+		}
+
+		d1=(Doctor *)calloc(dsize, sizeof(Doctor));
+		rewind(verificaArchivo);
+		fread(d1, sizeof(Doctor), dsize, verificaArchivo);
 	
 		//int resultado;
+		do{
+			printf("N�mero de trabajador: ");
+			scanf("%d", &d.NumeroTrabajador);
+			repetido=0;
+			for(int i=0; i<dsize; i++){
+				if(d.NumeroTrabajadore==d1[i].NumeroTrabajador && d1[i].borrado==0){
+					repetido=1;
+					printf("\nEl numero de trabajador ingresado ya se encuentra registrado, ingresa otro por favor\n");
+					system("pause");
+					system("cls");
+					printf("\n\t\tAlta de doctores\n\n");
+				}
+			}
+			
+			if(contador>1 && strcmp(ans, "si")!=0){
+				contador=0;
+				printf("\n\nDeseas cancelar? si/no\n");
+				fflush(stdin);
+				fgets(ans, 5, stdin);
+				strtok(ans, "\n");
+			}
+			if(strcmp(ans, "si")==0||strcmp(ans, "Si")==0||strcmp(ans, "SI")==0)
+				return;
+			contador++;
+		}while(repetido==1);
+
 		
-		printf("N�mero de trabajador: ");
-		scanf("%d", &d.NumeroTrabajador);
 		
 		printf("Nombre: ");
 		fflush(stdin); gets(d.DatosPersonales.Nombre);
@@ -457,6 +495,7 @@ void RegistroDoctores(){
 		fwrite(&d, sizeof(Doctor), 1, archivo);
 	
 		fclose(archivo);
+		fclose(verificaArchivo);
 		
 		printf("\n\nEl registro se agreg� de forma exitosa\n\n");
 	}
