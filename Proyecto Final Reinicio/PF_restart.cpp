@@ -801,26 +801,71 @@ void menuDoctores(){
 }
 
 void RegistroConsultas(){
-	FILE *archivo;
-	Consulta c;
-	
+	FILE *archivo, *verificaArchivo;
+	Consulta c, *c1, c1temp;
+	int csize=0, repetido=0, contador=0;
+	char ans[4];
+
 	system("cls");
 	
 	printf("\n\t\tAgendar consulta\n\n");
 
+	verificaArchivo = fopen("Consultas.bin", "rb");
 	archivo = fopen("Consultas.bin", "ab");
 	
 	if (archivo==NULL){
 		printf("\nNo se pudo abrir el archivo\n\n");
+		system("pause");
+		return;
+	}else if(verificaArchivo==NULL){
+		printf("\nNo se pudo abrir el archivo\n\n");
+		system("pause");
+		return;
 	}else{	
 	
 		//int resultado;
 		int cancela=0;
 		int PacienteEncontrado;
 		int MedicoEncontrado;
+
+		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaño del arreglo
+		while(!feof(verificaArchivo)){
+			fread(&c1temp, sizeof(Consulta), 1, verificaArchivo);
+			csize++;
+		}
+
+		c1=(Consulta *)calloc(csize, sizeof(Consulta));
+		rewind(verificaArchivo);
+		fread(c1, sizeof(Consulta), csize, verificaArchivo);
+	
+		//int resultado;
+		do{
+			printf("N�mero de consulta: ");
+			scanf("%d", &c.NoConsulta);
+			repetido=0;
+			for(int i=0; i<csize; i++){
+				if(c.NoConsulta==c1[i].NoConsulta && c1[i].borrado==0){
+					repetido=1;
+					printf("\nEl numero de consulta ingresado ya se encuentra registrado, ingrese otro por favor\n");
+					system("pause");
+					system("cls");
+					printf("\n\t\tAgendar consulta\n\n");
+				}
+			}
+			
+			if(contador>1 && strcmp(ans, "si")!=0){
+				contador=0;
+				printf("\n\nDeseas cancelar? si/no\n");
+				fflush(stdin);
+				fgets(ans, 5, stdin);
+				strtok(ans, "\n");
+			}
+			if(strcmp(ans, "si")==0||strcmp(ans, "Si")==0||strcmp(ans, "SI")==0)
+				return;
+			contador++;
+			
+		}while(repetido==1);
 		
-		printf("N�mero de consulta: ");
-		scanf("%d", &c.NoConsulta);
 		
 		do{
 			printf("Clave del paciente: ");
