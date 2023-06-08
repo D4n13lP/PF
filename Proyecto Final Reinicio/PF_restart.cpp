@@ -35,23 +35,60 @@ void ImprimePaciente(Paciente p){
 }
 
 void RegistroPacientes(){
-	FILE *archivo;
-	Paciente p;
+	FILE *archivo, *verificaArchivo;
+	Paciente p, *p1, p1temp;
+	int psize=0, repetido=0, contador=0;  //Repetido=1 -> SI, 0 -> NO
+	char ans[4];
+
 	
 	system("cls");
 	
 	printf("\n\t\tAlta de pacientes\n\n");
 
+	verificaArchivo = fopen("Pacientes.bin", "rb");
 	archivo = fopen("Pacientes.bin", "ab");
 	
 	if (archivo==NULL){
 		printf("\nNo se pudo abrir el archivo\n\n");
+	}else if(verificaArchivo==NULL){
+		printf("\nNo se pudo abrir el archivo\n\n");
 	}else{	
-	
+		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaño del arreglo
+		while(!feof(verificaArchivo)){
+			fread(&p1temp, sizeof(Paciente), 1, verificaArchivo);
+			psize++;
+		}
+
+		p1=(Paciente *)calloc(psize, sizeof(Paciente));
+		rewind(verificaArchivo);
+		fread(p1, sizeof(Paciente), psize, verificaArchivo);
+
 		//int resultado;
-		
-		printf("Clave: ");
-		scanf("%d", &p.clave);
+		do{
+			printf("Clave: ");
+			scanf("%d", &p.clave);
+			repetido=0;
+			for(int i=0; i<psize; i++){
+				if(p.clave==p1[i].clave && p1[i].borrado==0){
+					repetido=1;
+					printf("\nLa clave ingresada ya se encuentra registrada, ingrese otra por favor\n");
+					system("pause");
+					system("cls");
+					printf("\n\t\tAlta de pacientes\n\n");
+				}
+			}
+			
+			if(contador>1 && strcmp(ans, "si")!=0){
+				contador=0;
+				printf("\n\nDeseas cancelar? si/no\n");
+				fflush(stdin);
+				fgets(ans, 5, stdin);
+				strtok(ans, "\n");
+			}
+			if(strcmp(ans, "si")==0||strcmp(ans, "Si")==0||strcmp(ans, "SI")==0)
+				return;
+			contador++;
+		}while(repetido==1);
 		
 		printf("Nombre: ");
 		fflush(stdin); gets(p.DatosPersonales.Nombre);
@@ -70,6 +107,7 @@ void RegistroPacientes(){
 		fwrite(&p, sizeof(Paciente), 1, archivo);
 	
 		fclose(archivo);
+		fclose(verificaArchivo);
 		
 		printf("\n\nEl registro se agreg� de forma exitosa\n\n");
 	}
@@ -221,23 +259,33 @@ void ActualizacionPacientes(){
 }
 
 void BorradoPacientes(){
-	int wantedKey, posicion, encontrado;
-	char ans;
 	FILE *archivo;
 	Paciente p;
-	printf("\nIngresa la clave del paciente a borrar: ");
-	scanf("%d", &wantedKey);
+	int wantedKey, posicion, encontrado=0;
+	char ans;
+
+	system("cls");
+	
+	printf("\n\t\tBorrado de Pacientes\n\n");
+
 	archivo=fopen("Pacientes.bin", "r+b");
+
 	if(archivo==NULL){
 		printf("\nNo se pudo encontrar el archivo\n");
 		system("pause");
+		return;
 	}
+
+	printf("\nIngresa la clave del paciente a borrar: ");
+	scanf("%d", &wantedKey);
 	
 	//Se comineza en la posicion 0 (byte 0 en el archivo)
 	posicion=0;
+
 	fread(&p, sizeof(Paciente), 1, archivo);
 
 	while(!feof(archivo) && encontrado==0){
+
 		if( p.clave==wantedKey && p.borrado==0){
 			encontrado=1;
 			
@@ -267,7 +315,16 @@ void BorradoPacientes(){
 			fread(&p, sizeof(Paciente), 1, archivo);
 		}	
 	}
+
+	if(encontrado==0)
+		printf("\n\nNo se encontr� al paciente con clave %d\n\n", wantedKey);
+	
+	fclose(archivo);
+	
+	system("pause");
 }
+
+
 
 void ListadoPacientes(){
 	FILE *archivo;
