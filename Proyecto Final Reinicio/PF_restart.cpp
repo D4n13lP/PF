@@ -1262,12 +1262,16 @@ void getgraphicsData(int opcion){
 	}
 
     //EXTRAER LOS COSTOS DE LAS CONSULTAS Y ACUMULARLOS EN EL ARREGLO datos EN EL NUMERO DE TRABAJADOR QUE LE CORRESPONDA
+	int savedPosition;
 	rewind(archivocons);
 	fread(&c, sizeof(Consulta), 1, archivocons);
 	
 	while(c.borrado==1){
 		fread(&c, sizeof(Consulta), 1, archivocons);
 	}
+
+	//savedPosition=ftell(archivocons);
+	printf("\nSaved Position: %d\n", savedPosition);
 
 	for(int i=0; i<gsize; ++i){
 
@@ -1277,12 +1281,15 @@ void getgraphicsData(int opcion){
 			if(datos[i].NumeroTrabajador==c.NumeroTrabajador && c.borrado==0){
 				datos[i].ganancia+=c.costo;
 			}
-			if(datos[i].NumeroTrabajador!=c.NumeroTrabajador){     //Cuando encuentre un numero de Trabajador que no sea igual 
-				break;                                         //al que esta en la actual posicion del arreglo datos[] se rompe el 
-			}                                                  //bucle para cambiar a la siguinte posicion del arreglo datos[]  
+			//if(datos[i].NumeroTrabajador!=c.NumeroTrabajador){     //Cuando encuentre un numero de Trabajador que no sea igual 
+				//break;                                         //al que esta en la actual posicion del arreglo datos[] se rompe el 
+			//}                                                  //bucle para cambiar a la siguinte posicion del arreglo datos[]  
 			fread(&c, sizeof(Consulta), 1, archivocons);
 		}
-
+	
+		//fseek(archivocons, savedPosition, SEEK_SET);
+		rewind(archivocons);
+		fread(&c, sizeof(Consulta), 1, archivocons);
 	}
 
     //EXTRAER EL NOMBRE DEL DOCTOR QUE COINCIDE CON EL NUMERO DE TRABAJADOR DEL ARCHIVO D
