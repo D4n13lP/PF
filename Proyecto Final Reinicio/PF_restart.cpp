@@ -967,60 +967,82 @@ int consultationUpdateMenu(){
 }
 
 void ActualizacionConsultas(){
-	int consultaBuscada, found=0, posicion=0, opcion;
-	char ans;
-	Consulta c;
 	FILE *archivo;
+	Consulta c;
+	int found=0, consultaBuscada, posicion=0, opcion;
+	char ans;
+	
 	system("cls");
+
 	printf("Actualizacion de consultas\n");
-	printf("Ingresa el numero de la consulta que deseas actualizar: ");
-	scanf("%d", &consultaBuscada);
+
 	archivo = fopen("Consultas.bin", "r+b");
+	
 	if(archivo==NULL){
 		printf("No se pudo encontrar el archivo\n");
 		system("pause");
 		return;
 	}
+
+	printf("Ingresa el numero de la consulta que deseas actualizar: ");
+	scanf("%d", &consultaBuscada);
+
 	fread(&c, sizeof(Consulta), 1, archivo);
+
 	while(!feof(archivo) && found==0){
+
 		if(c.NoConsulta==consultaBuscada && c.borrado==0){
 			found=1;
+
 			ImprimeConsulta(c);
+
 			printf("\nEs la consulta que deseas modificar? s/n: ");
 			fflush(stdin); scanf("%c", &ans);
+
 			printf("\n\n");
 
-			if(ans=='s'){
+			if(ans=='s' || ans=='S'){
 
 				do{
 					system("cls");
 					opcion=consultationUpdateMenu();
 
 					switch(opcion){
-						case 1: printf("\nCosto: "); scanf("%f", &c.costo);
+						case 1: printf("\nCosto de la consulta: "); scanf("%f", &c.costo); 
+								printf("\nCosto modificado correctamente ...\n\n"); system("pause");
 						break;
-						case 2: printf("\nNumero de Trabajador: "); scanf("%d", &c.NumeroTrabajador);
+						case 2: printf("\nNumero de Trabajador: "); scanf("%d", &c.NumeroTrabajador); 
+								printf("\nSe cambio al medico correctamente ...\n\n"); system("pause");
 						break;
 					}
 
-					fseek(archivo, sizeof(Consulta)*posicion, SEEK_SET);    
-					fwrite(&c, sizeof(Consulta), 1, archivo); 
 				}while(opcion!=3);
 
-				printf("\nSe actualizo correctamente la consulta\n");
+				fseek(archivo, sizeof(Consulta)*posicion, SEEK_SET);  
+
+				fwrite(&c, sizeof(Consulta), 1, archivo); 
+
+				printf("\nLa consulta ha sido actualizada\n");
 				system("pause");
-			}          
+			}else{
+				printf("\nOperación cancelada\n");
+			}         
+		}else{
+
+			//La posición solo se incrementa cuando no se ha encontrado al registro.
+			//Lo mismo sucede con la siguiente lectura. 
+			posicion++;
+			fread(&c, sizeof(Consulta), 1, archivo);
 		}
 		
-		fread(&c, sizeof(Consulta), 1, archivo);
-		posicion++;
-		
-			
-		if(found==0){
-			printf("\nNo se pudo encontrar la consulta con el numero %d", consultaBuscada);
-		}
 	}
-                                                  
+
+	if(!found)
+		printf("\n\nNo se pudo encontrar la consulta con el numero: %d\n\n", consultaBuscada);
+	
+	fclose(archivo);
+
+	system("pause");                                             
 	  
 }
 
