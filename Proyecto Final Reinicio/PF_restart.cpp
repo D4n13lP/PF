@@ -1349,6 +1349,20 @@ void menuGraficas(){
 
 int main(){
 	int opcion;
+	FILE *caratula;
+	char c;
+	caratula = fopen("Portada.txt", "r");
+
+	if(caratula==NULL){
+		printf("\n\n\t\tError al abrir el archivo");
+		return 1;
+	}else{
+		while((c=fgetc(caratula))!=EOF){
+			printf("%c", c);
+		}
+		printf("\n\n");
+	}
+	system("pause");
 	
 	
 	do{
