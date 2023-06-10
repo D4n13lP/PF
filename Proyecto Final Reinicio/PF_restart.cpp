@@ -3,6 +3,7 @@
 #include <string.h>
 #include <locale.h> //Biblioteca necesaria para configurar idioma
 #include <winbgim.h>
+#include <windows.h>
 #include "graficas.h"
 
 //Agregar esta función sin modificarla
