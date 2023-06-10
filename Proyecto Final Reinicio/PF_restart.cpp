@@ -1,9 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h> //Biblioteca necesaria para configurar idioma
 #include <winbgim.h>
 #include "graficas.h"
 
+//Agregar esta función sin modificarla
+void ConfiguraIdioma()
+{
+	/* ********************************************************************
+	
+		OBJETIVO:
+		Función que configura el idioma para que los caracteres del idioma
+	   	Español se vean correctamente y que las cantidades utilicen el 
+	   	símbolo fraccionario adecuado a México  
+		   
+	******************************************************************** */
+	   
+	//Cambia al idioma Español   
+	struct lconv *lcPtr;
+	setlocale(LC_ALL, "spanish");
+	SetConsoleCP(CP_UTF8); 
+    SetConsoleOutputCP(CP_UTF8); 
+	lcPtr = localeconv();
+
+	//Configura cantidades para México
+	lcPtr->decimal_point = ".";
+	lcPtr->thousands_sep = ",";
+	lcPtr->grouping = "3";
+		
+}
 
 
 int menu(){
@@ -372,13 +398,13 @@ void menuPaciente(){
 		printf("\n\n\t\tOperaciones con pacientes\n\n");
 		
 		printf("1. Registro\n");
-		printf("2. B�squeda\n");
-		printf("3. Actualizaci�n\n");
+		printf("2. Búsqueda\n");
+		printf("3. Actualización\n");
 		printf("4. Borrado\n");
 		printf("5. Listado de registros\n");
 		printf("6. Salir\n");
 		
-		printf("\nOpci�n: ");
+		printf("\nOpción: ");
 		scanf("%d", &opcion);
 		
 		switch(opcion){
@@ -1351,6 +1377,10 @@ int main(){
 	int opcion;
 	FILE *caratula;
 	char c;
+
+	//Configura el idioma desde el inicio de main. Llamar a la función.
+	ConfiguraIdioma();
+
 	caratula = fopen("Portada.txt", "r");
 
 	if(caratula==NULL){

@@ -1,6 +1,5 @@
-                 
-
-       		******************  Proyecto Final. (Equipo 02) Hospital  ******************
+       		
+		******************  Proyecto Final. (Equipo 02) Hospital  ******************
                 -----------------------------------------------------------------------------
 
 		Objetivo: Tomando como base al programa Hospital - varios archivos (base para 
