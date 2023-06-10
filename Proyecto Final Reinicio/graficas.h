@@ -110,6 +110,8 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
     } */
     char ganancia2string[20];
     char fullname[50];
+
+    setlinestyle(SOLID_LINE,0,1);
     for (i = 0; i < nbarras; i++) {
         setcolor(i + 1);
         AlturaBarra = (Datos[i] / ValorBarraMax) * EspacioY;
@@ -120,6 +122,7 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
         outtextxy(XBarra, YBarra-20, ganancia2string);
         sprintf(fullname, "Dr. %s %s", datos[i].DatosPersonales.Nombre, datos[i].DatosPersonales.Apellidos);
         outtextxy(XBarra, Yf+5, fullname);
+        line(XBarra, YBarra, Xf, YBarra);                   //Linea que resalta la altura de las barras
         XBarra += AnchoBarra * 2;
     }
 

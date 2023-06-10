@@ -1296,9 +1296,11 @@ void getgraphicsData(int opcion){
 	fread(&d, sizeof(Doctor), 1, archivodr);
 
 	for(int i=0; i<gsize; ++i){
+		
+		rewind(archivodr);
 		while (!feof(archivodr))
 		{
-			if(datos[i].NumeroTrabajador==d.NumeroTrabajador)
+			if(datos[i].NumeroTrabajador==d.NumeroTrabajador && d.borrado==0)
 			{
 				strcpy(datos[i].DatosPersonales.Nombre, d.DatosPersonales.Nombre);
 				strcpy(datos[i].DatosPersonales.Apellidos, d.DatosPersonales.Apellidos);
