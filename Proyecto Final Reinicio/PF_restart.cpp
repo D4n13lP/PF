@@ -82,7 +82,7 @@ void RegistroPacientes(){
 	}else if(verificaArchivo==NULL){
 		printf("\nNo se pudo abrir el archivo\n\n");
 	}else{	
-		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaÃ±o del arreglo
+		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaño del arreglo
 		while(!feof(verificaArchivo)){
 			fread(&p1temp, sizeof(Paciente), 1, verificaArchivo);
 			psize++;
@@ -172,8 +172,9 @@ int BusquedaPacientes(int clave){
 	}
 	
 	fclose(archivo);
-	if(clave==0)
+	if(clave==0){
 		system("pause");
+	}
 	
 	return encontrado;
 	//-------------------------------------------
@@ -339,7 +340,7 @@ void BorradoPacientes(){
 			
 		}else{
 			
-			//La posiciï¿½n solo se incrementa cuando no se ha encontrado al registro.
+			//La posición solo se incrementa cuando no se ha encontrado al registro.
 			//Lo mismo sucede con la siguiente lectura. 
 			posicion++;
 			fread(&p, sizeof(Paciente), 1, archivo);
@@ -416,9 +417,9 @@ void menuPaciente(){
 				RegistroPacientes();
 				break;
 			case 2:
-				//Se manda con 0 para que dentro de la funciï¿½n se
+				//Se manda con 0 para que dentro de la función se
 				//solicite la clave				
-				BusquedaPacientes(0);
+				BusquedaPacientes(0); system("pause");
 				break;
 			case 3:
 				ActualizacionPacientes();
@@ -463,7 +464,7 @@ void RegistroDoctores(){
 	}else if(verificaArchivo==NULL){
 		printf("\nNo se pudo abrir el archivo\n\n");
 	}else{
-		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaÃ±o del arreglo
+		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaño del arreglo
 		while(!feof(verificaArchivo)){
 			fread(&d1temp, sizeof(Doctor), 1, verificaArchivo);
 			dsize++;
@@ -734,7 +735,7 @@ void BorradoDoctores(){
 			
 		}else{
 			
-			//La posiciï¿½n solo se incrementa cuando no se ha encontrado al registro.
+			//La posición solo se incrementa cuando no se ha encontrado al registro.
 			//Lo mismo sucede con la siguiente lectura. 
 			posicion++;
 			fread(&d, sizeof(Doctor), 1, archivo);
@@ -811,9 +812,9 @@ void menuDoctores(){
 				break;
 			case 2:
 				
-				//Se manda con 0 para que dentro de la funciï¿½n se
+				//Se manda con 0 para que dentro de la función se
 				//solicite la clave
-				BusquedaDoctores(0);
+				BusquedaDoctores(0); system("pause");
 				break;
 			case 3:
 				ActualizacionDoctores();
@@ -859,7 +860,7 @@ void RegistroConsultas(){
 		int PacienteEncontrado;
 		int MedicoEncontrado;
 
-		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaÃ±o del arreglo
+		//Leemos el archivo completo para saber cuantos registros contiene y asignarlo al tamaño del arreglo
 		while(!feof(verificaArchivo)){
 			fread(&c1temp, sizeof(Consulta), 1, verificaArchivo);
 			csize++;
@@ -1060,7 +1061,7 @@ void ActualizacionConsultas(){
 			}         
 		}else{
 
-			//La posiciÃ³n solo se incrementa cuando no se ha encontrado al registro.
+			//La posición solo se incrementa cuando no se ha encontrado al registro.
 			//Lo mismo sucede con la siguiente lectura. 
 			posicion++;
 			fread(&c, sizeof(Consulta), 1, archivo);
@@ -1100,7 +1101,7 @@ void BorradoConsultas(){
 	printf("Clave a borrar: ");
 	scanf("%d", &claveBuscada);
 	
-	//Se comienza en la posiciï¿½n 0 (byte 0 en el archivo)
+	//Se comienza en la posición 0 (byte 0 en el archivo)
 	posicion=0;
 	
 	fread(&c, sizeof(Consulta), 1, archivo);
@@ -1130,7 +1131,7 @@ void BorradoConsultas(){
 			
 		}else{
 			
-			//La posiciï¿½n solo se incrementa cuando no se ha encontrado al registro.
+			//La posición solo se incrementa cuando no se ha encontrado al registro.
 			//Lo mismo sucede con la siguiente lectura. 
 			posicion++;
 			fread(&c, sizeof(Consulta), 1, archivo);
@@ -1272,7 +1273,7 @@ void getgraphicsData(int opcion){
 					if(datos[j].NumeroTrabajador==c.NumeroTrabajador) 
 						isRepeated=1;
 				}
-		//INCREMENTAR EL TAMAÃ‘O DEL ARREGLO datos PARA GUARDAR EL SIGUINTE NUEMERO DE TRABAJADOR 
+		//INCREMENTAR EL TAMAÑO DEL ARREGLO datos PARA GUARDAR EL SIGUINTE NUEMERO DE TRABAJADOR 
 				if(isRepeated==0 && c.borrado==0){
 				
 					gsize++;
@@ -1293,7 +1294,7 @@ void getgraphicsData(int opcion){
 	}
 
     //EXTRAER LOS COSTOS DE LAS CONSULTAS Y ACUMULARLOS EN EL ARREGLO datos EN EL NUMERO DE TRABAJADOR QUE LE CORRESPONDA
-	int savedPosition;
+	//int savedPosition;
 	rewind(archivocons);
 	fread(&c, sizeof(Consulta), 1, archivocons);
 	
@@ -1383,7 +1384,7 @@ int main(){
 	FILE *caratula;
 	char c;
 
-	//Configura el idioma desde el inicio de main. Llamar a la funciÃ³n.
+	//Configura el idioma desde el inicio de main. Llamar a la función.
 	ConfiguraIdioma();
 
 	caratula = fopen("Portada.txt", "r");
