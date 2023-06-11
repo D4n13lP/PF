@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <winbgim.h>
+#include <math.h>
 #include <time.h>
 
 //Porcentaje de espacio para que quede un "margen" en la pantalla
@@ -43,6 +44,11 @@ typedef struct{
 	Persona DatosPersonales;
 	float ganancia;
 }Gananciadoc;
+
+typedef struct{                  //Esta estructura guarda un punto del plano de 2 dimensiones 
+    double x;                    //Se usa para guardar el centro de las rebanadas del crculo y
+    double y;                    //poder colocar en el centro de cada rebanada de la grafica 
+}Point;                          //un texto con el porcentaje que representa la rebanada
 
 
 int generarAleatorio() {
@@ -133,7 +139,13 @@ void graficaBarras(Gananciadoc *datos, int nbarras){
 
 }
 
-
+Point getSliceCenter(Point center, double radius, double startAngle, double endAngle) {
+    Point sliceCenter;
+    double angle = (startAngle + endAngle) / 2;
+    sliceCenter.x = center.x + radius * cos(angle);
+    sliceCenter.y = center.y + radius * sin(angle);
+    return sliceCenter;
+}
 
 void graficaPastel(Gananciadoc *datos, int nbarras) {
 
@@ -184,6 +196,8 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
 
         int r, g, b, radio=alto/3; 
         float start, end, anterior=0;
+        Point center = {ancho/2, alto/2};
+        double textslideRadius = alto/4;
        
         setcolor(COLOR(255,255,255));
 
@@ -217,7 +231,22 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
             settextstyle(DEFAULT_FONT, HORIZ_DIR, adjustedFontSize);
             outtextxy(left, top+squareSize, nombreYporcentaje);
             anterior=end;
+            
         }
+
+
+    for (int i = 0; i < nbarras; i++)
+    {
+        
+        start=anterior;
+        end=start-(360*(porcentajes[i]/100));
+
+
+        char buffer[10];
+        sprintf(buffer, "%.2f%%", porcentajes[i]);
+        outtextxy(center.x + (textslideRadius * cos((start + end) * M_PI / 360)), center.y + (textslideRadius * sin((start + end) * M_PI / 360)), buffer);
+        anterior=end;
+    }
 
 
         while(!kbhit());
