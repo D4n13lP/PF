@@ -9,6 +9,8 @@
 //Cantidad de datos
 #define CANTIDAD 8
 
+#define PI 3.14159
+
 
 typedef struct {
 	char Nombre[50];
@@ -235,6 +237,7 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
         }
 
 
+    //settextstyle(4, HORIZ_DIR, 1);
     for (int i = 0; i < nbarras; i++)
     {
         
@@ -244,7 +247,8 @@ void graficaPastel(Gananciadoc *datos, int nbarras) {
 
         char buffer[10];
         sprintf(buffer, "%.2f%%", porcentajes[i]);
-        outtextxy(center.x + (textslideRadius * cos((start + end) * M_PI / 360)), center.y + (textslideRadius * sin((start + end) * M_PI / 360)), buffer);
+        //outtextxy(center.x + (textslideRadius * cos((start + end) * M_PI / 360)), center.y + (textslideRadius * sin((start + end) * M_PI / 360)), buffer);
+        outtextxy(center.x + (textslideRadius * cos((start + end) * PI / 360)), center.y + (textslideRadius * sin((start + end) * PI / 360)), buffer);
         anterior=end;
     }
 
