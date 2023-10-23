@@ -1,3 +1,6 @@
+//Este codigo es un proyecto sobre un sistema que lleva el control de las ganancias y la 
+//plantilla de doctores que trabajan en un hospital
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
